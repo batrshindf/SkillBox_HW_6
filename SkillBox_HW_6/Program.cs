@@ -47,9 +47,34 @@ namespace HomeWork6
             Console.WriteLine(
                 "Введите название файла с числом N и его расширение (txt) или весь путь к данному файлу:");
             inputPath = Console.ReadLine();
+            
+            CheckTxtRequestPath();
 
             outputPath = inputPath.Insert(inputPath.LastIndexOf('\\') + 1, "Output");
             compressed = outputPath.Remove(outputPath.LastIndexOf('.') + 1) + "zip";
+        }
+
+        /// <summary>
+        ///     Провека на наличе и расширение файла.
+        /// </summary>
+        private static void CheckTxtRequestPath()
+        {
+            var o = File.Exists(inputPath);
+            
+            if (inputPath[inputPath.Length - 1] != 't' && inputPath[inputPath.Length - 2] != 'x' &&
+                inputPath[inputPath.Length - 3] != 't')
+            {
+                o = false;
+            }
+
+            if (inputPath.LastIndexOf('.') == -1 || o == false)
+            {
+                Console.Clear();
+                Console.WriteLine("Такого файла не существует или у файла нет или неправильное расширение. Установите расширение (txt) " +
+                                  "или создайте файл с данным расширением.");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
 
         /// <summary>
@@ -122,7 +147,9 @@ namespace HomeWork6
         private static void OutNumberOfGroups(long inNumber, bool a)
         {
             string yesNo;
-            Console.WriteLine("Записать количество групп на диск? (Да/Нет): ");
+            Console.Clear();
+            Console.WriteLine($"Количесвто групп чисел для N = {inNumber} равно {countGroup}.");
+            Console.Write("Записать количество групп на диск? (Да/Нет): ");
             yesNo = Console.ReadLine();
             yesNo.ToLower();
             if (Equals(yesNo, "да"))
@@ -172,7 +199,7 @@ namespace HomeWork6
 
             var inputNumber = File.ReadAllText(inputPath);
             inputNumber = inputNumber.Trim();
-
+            
             for (int i = 0; i < inputNumber.Length; i++)
             {
                 if (inputNumber[i] == ' ')
@@ -207,12 +234,13 @@ namespace HomeWork6
         }
 
         /// <summary>
-        ///     Не соблюдение условия или пустой файл
+        ///     Не соблюдение условия или пустой файл.
         /// </summary>
         private static void Error()
         {
             outText =
                 "Файл пустой или число не удовлетворяет условиям. Введите в файл число в диапозоне: 1 <= N <= 1 000 000 000";
+
             File.WriteAllText(outputPath, outText);
             Console.WriteLine(outText);
             Console.ReadKey();
