@@ -26,12 +26,12 @@ namespace HomeWork6
             if (Equals(yesNo, "да"))
             {
                 NumberOfGroups(inNumber);
-                OutNumberOfGroups(inNumber, true);
+                OutNumberOfGroups(inNumber);
             }
             else
             {
                 SplitIntoGroup(inNumber);
-                WritingToDisk(inNumber);
+                OutNumberOfGroups(inNumber);
             }
 
             Archiving();
@@ -94,7 +94,7 @@ namespace HomeWork6
         }
 
         /// <summary>
-        ///     Архивация
+        ///     Архивация полученного файла
         /// </summary>
         private static void Archiving()
         {
@@ -113,7 +113,7 @@ namespace HomeWork6
         }
 
         /// <summary>
-        ///     Архивация полученного файла
+        ///     Метод логики архивации
         /// </summary>
         private static void ArchivingFile()
         {
@@ -130,32 +130,13 @@ namespace HomeWork6
         }
 
         /// <summary>
-        ///     Запись в файл чисел групп и/или количества групп.
-        /// </summary>
-        /// <param name="inNumber">Число N</param>
-        private static void WritingToDisk(long inNumber)
-        {
-            File.WriteAllText(outputPath, "");
-            Console.Write("Записать группы чисел на диск? (Да/Нет): ");
-            var yesNo = Console.ReadLine();
-            var a = true;
-            yesNo.ToLower();
-            if (Equals(yesNo, "да"))
-            {
-                File.WriteAllText(outputPath, outText);
-                a = false;
-            }
-
-            OutNumberOfGroups(inNumber, a);
-        }
-
-        /// <summary>
         ///     Вывод Количества групп.
         /// </summary>
         /// <param name="inNumber">Число N</param>
         /// <param name="a">Условие на добавление строки в пустой файл или файл с данными</param>
-        private static void OutNumberOfGroups(long inNumber, bool a)
+        private static void OutNumberOfGroups(long inNumber)
         {
+            var a = false;
             string yesNo;
             Console.Clear();
             Console.WriteLine($"Количесвто групп чисел для N = {inNumber} равно {countGroup}.");
@@ -180,23 +161,27 @@ namespace HomeWork6
         /// <param name="inNumber"></param>
         private static void SplitIntoGroup(long inNumber)
         {
-            int newLine = 1;
-
-            for (int i = 2; i <= inNumber; i++)
+            using (StreamWriter sw = new StreamWriter(outputPath))
             {
-                if (i == newLine * 2)
+                int newLine = 1;
+                sw.Write(outText);
+                for (int i = 2; i <= inNumber; i++)
                 {
-                    newLine = i;
-                    countGroup++;
-                    outText += $".\n\nГруппа {countGroup}: {i}";
-                }
-                else
-                {
-                    outText += $" {i}";
+                    outText = string.Empty;
+
+                    if (i == newLine * 2)
+                    {
+                        newLine = i;
+                        countGroup++;
+                        outText += $"\n\nГруппа {countGroup}: {i}";
+                    }
+                    else
+                    {
+                        outText += $" {i}";
+                    }
+                    sw.Write(outText);
                 }
             }
-
-            outText.Trim();
         }
 
         /// <summary>
