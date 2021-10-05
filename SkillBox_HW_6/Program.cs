@@ -22,16 +22,16 @@ namespace HomeWork6
             Console.Write("Посчитать только количество групп? (Да/Нет): ");
             var yesNo = Console.ReadLine();
             yesNo.ToLower();
-
+            
             if (Equals(yesNo, "да"))
             {
                 NumberOfGroups(inNumber);
-                OutNumberOfGroups(inNumber);
+                OutNumberOfGroups(inNumber, true);
             }
             else
             {
                 SplitIntoGroup(inNumber);
-                OutNumberOfGroups(inNumber);
+                OutNumberOfGroups(inNumber, false);
             }
 
             Archiving();
@@ -134,9 +134,8 @@ namespace HomeWork6
         /// </summary>
         /// <param name="inNumber">Число N</param>
         /// <param name="a">Условие на добавление строки в пустой файл или файл с данными</param>
-        private static void OutNumberOfGroups(long inNumber)
+        private static void OutNumberOfGroups(long inNumber, bool a)
         {
-            var a = false;
             string yesNo;
             Console.Clear();
             Console.WriteLine($"Количесвто групп чисел для N = {inNumber} равно {countGroup}.");
@@ -150,8 +149,10 @@ namespace HomeWork6
                     File.WriteAllText(outputPath, $"Количесвто групп чисел для N = {inNumber} равно {countGroup}.");
                 }
                 else
+                {
                     File.AppendAllText(outputPath,
                         $"\n\n\nКоличесвто групп чисел для N = {inNumber} равно {countGroup}.");
+                }
             }
         }
 
