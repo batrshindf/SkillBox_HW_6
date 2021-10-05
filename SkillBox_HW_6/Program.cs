@@ -34,10 +34,11 @@ namespace HomeWork6
                 WritingToDisk(inNumber);
             }
 
-            ArchivingFile();
+            Archiving();
 
             Console.ReadKey();
         }
+
 
         /// <summary>
         ///     Путь к файлу. Запрашиваем путь к файлу с числом N
@@ -47,7 +48,7 @@ namespace HomeWork6
             Console.WriteLine(
                 "Введите название файла с числом N и его расширение (txt) или весь путь к данному файлу:");
             inputPath = Console.ReadLine();
-            
+
             CheckTxtRequestPath();
 
             outputPath = inputPath.Insert(inputPath.LastIndexOf('\\') + 1, "Output");
@@ -60,7 +61,7 @@ namespace HomeWork6
         private static void CheckTxtRequestPath()
         {
             var o = File.Exists(inputPath);
-            
+
             if (inputPath[inputPath.Length - 1] != 't' && inputPath[inputPath.Length - 2] != 'x' &&
                 inputPath[inputPath.Length - 3] != 't')
             {
@@ -70,8 +71,9 @@ namespace HomeWork6
             if (inputPath.LastIndexOf('.') == -1 || o == false)
             {
                 Console.Clear();
-                Console.WriteLine("Такого файла не существует или у файла нет или неправильное расширение. Установите расширение (txt) " +
-                                  "или создайте файл с данным расширением.");
+                Console.WriteLine(
+                    "Такого файла не существует или у файла нет или неправильное расширение. Установите расширение (txt) " +
+                    "или создайте файл с данным расширением.");
                 Console.ReadKey();
                 Environment.Exit(0);
             }
@@ -92,30 +94,38 @@ namespace HomeWork6
         }
 
         /// <summary>
-        ///     Архивация полученного файла
+        ///     Архивация
         /// </summary>
-        private static void ArchivingFile()
+        private static void Archiving()
         {
+            string yesNo;
             Console.Write("Создать архив данного файла? (Да/Нет): ");
-            var yesNo = Console.ReadLine();
+            yesNo = Console.ReadLine();
             yesNo.ToLower();
             if (Equals(yesNo, "да"))
             {
-                using (FileStream ss = new FileStream(outputPath, FileMode.OpenOrCreate))
-                {
-                    using (FileStream ts = File.Create(compressed)) //поток для записи сжатого файла
-                    {
-                        using (GZipStream cs = new GZipStream(ts, CompressionMode.Compress)) //Поток архивации
-                        {
-                            ss.CopyTo(cs); //Копирование основного потока (файла) в другой (архивный)
-                        }
-                    }
-                }
-
+                ArchivingFile();
                 Console.Clear();
                 Console.WriteLine(
                     $"Архивация файла {outputPath} завершина.\nРазмер файла до архивации: {new FileInfo(outputPath).Length} байт;" +
                     $"\nРазмер файла после архивации: {new FileInfo(compressed).Length} байт.");
+            }
+        }
+
+        /// <summary>
+        ///     Архивация полученного файла
+        /// </summary>
+        private static void ArchivingFile()
+        {
+            using (FileStream ss = new FileStream(outputPath, FileMode.OpenOrCreate))
+            {
+                using (FileStream ts = File.Create(compressed)) //поток для записи сжатого файла
+                {
+                    using (GZipStream cs = new GZipStream(ts, CompressionMode.Compress)) //Поток архивации
+                    {
+                        ss.CopyTo(cs); //Копирование основного потока (файла) в другой (архивный)
+                    }
+                }
             }
         }
 
@@ -199,7 +209,7 @@ namespace HomeWork6
 
             var inputNumber = File.ReadAllText(inputPath);
             inputNumber = inputNumber.Trim();
-            
+
             for (int i = 0; i < inputNumber.Length; i++)
             {
                 if (inputNumber[i] == ' ')
